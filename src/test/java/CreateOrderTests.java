@@ -4,8 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
 
 public class CreateOrderTests {
 
@@ -23,10 +21,7 @@ public class CreateOrderTests {
         userClient.create(user);
         Response responseLogin = userClient.login(new UserCredentials(user.email, user.password));
         accessToken = responseLogin.path("accessToken");
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add("\"61c0c5a71d1f82001bdaaa6d\"");
-        ingredients.add("\"61c0c5a71d1f82001bdaaa6f\"");
-        Boolean success = userClient.createOrder("{\"ingredients\": " + ingredients.toString()+ "}", accessToken);
+        Boolean success = userClient.createOrder(new Ingredients().getIngredients(), accessToken);
         Assert.assertEquals(true, success);
     }
 
@@ -36,10 +31,7 @@ public class CreateOrderTests {
         userClient.create(user);
         Response responseLogin = userClient.login(new UserCredentials(user.email, user.password));
         accessToken = responseLogin.path("accessToken");
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add("\"60d3b41abdacab0026a73311\"");
-        ingredients.add("\"609646e4dc916e00276b2811\"");
-        String message = userClient.createOrderFail("{\"ingredients\": " + ingredients.toString()+ "}", accessToken);
+        String message = userClient.createOrderFail(new Ingredients().getIncorrectIngredients(), accessToken);
         Assert.assertEquals("One or more ids provided are incorrect", message);
     }
 
@@ -49,7 +41,7 @@ public class CreateOrderTests {
         userClient.create(user);
         Response responseLogin = userClient.login(new UserCredentials(user.email, user.password));
         accessToken = responseLogin.path("accessToken");
-        String message = userClient.createOrderFail("{\"ingredients\": [] }", accessToken);
+        String message = userClient.createOrderFail(new Ingredients().getNoIngredients(), accessToken);
         Assert.assertEquals("Ingredient ids must be provided", message);
 
     }
@@ -60,10 +52,7 @@ public class CreateOrderTests {
         userClient.create(user);
         Response responseLogin = userClient.login(new UserCredentials(user.email, user.password));
         accessToken = responseLogin.path("accessToken");
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add("\"61c0c5a71d1f82001bdaaa6d\"");
-        ingredients.add("\"61c0c5a71d1f82001bdaaa6f\"");
-        String message = userClient.createOrderWithoutToken("{\"ingredients\": " + ingredients.toString()+ "}");
+        String message = userClient.createOrderWithoutToken(new Ingredients().getIngredients());
         Assert.assertEquals("You should be authorised", message);
     }
 

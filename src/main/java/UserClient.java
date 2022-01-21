@@ -1,6 +1,8 @@
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
+import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
@@ -83,11 +85,15 @@ public class UserClient extends RestAssuredClient {
     }
 
     @Step("Создание заказа")
-    public Boolean createOrder(String ingredients, String token) {
+    public Boolean createOrder(List<String> ingredients, String token) {
+        JSONObject requestBodyJson = new JSONObject();
+        String requestBody = requestBodyJson
+                .put("ingredients", ingredients)
+                .toString();
         return given()
                 .header("Authorization", token)
                 .spec(getBaseSpec())
-                .body(ingredients)
+                .body(requestBody)
                 .log().all()
                 .when()
                 .post(ORDER_PATH)
@@ -128,11 +134,15 @@ public class UserClient extends RestAssuredClient {
     }
 
     @Step("Создание заказа")
-    public String createOrderFail(String ingredients, String token) {
+    public String createOrderFail(List<String> ingredients, String token) {
+        JSONObject requestBodyJson = new JSONObject();
+        String requestBody = requestBodyJson
+                .put("ingredients", ingredients)
+                .toString();
         return given()
                 .header("Authorization", token)
                 .spec(getBaseSpec())
-                .body(ingredients)
+                .body(requestBody)
                 .log().all()
                 .when()
                 .post(ORDER_PATH)
@@ -145,10 +155,14 @@ public class UserClient extends RestAssuredClient {
 
 
     @Step("Создание заказа")
-    public String createOrderWithoutToken(String ingredients) {
+    public String createOrderWithoutToken(List<String> ingredients) {
+        JSONObject requestBodyJson = new JSONObject();
+        String requestBody = requestBodyJson
+                .put("ingredients", ingredients)
+                .toString();
         return given()
                 .spec(getBaseSpec())
-                .body(ingredients)
+                .body(requestBody)
                 .log().all()
                 .when()
                 .post(ORDER_PATH)
